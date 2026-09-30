@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tateti</title>
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        h1 { margin-bottom: 10px; }
+        #mensaje { font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; color: #333; }
+        .tablero {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 5px;
+            background-color: #333;
+            border: 5px solid #333;
+        }
+        .celda {
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #222;
+            cursor: pointer;
+            user-select: none;
+        }
+        .celda:hover { background-color: #e9e9e9; }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover { background-color: #0056b3; }
+        .celda.ganadora { background-color: #b7f0c1; }margin: ;
+    </style>
+    </head>
+<body>
+
+    <h1>TaTeTi</h1>
+    <div id="mensaje">Turno del jugador: X</div>
+        <div id="marcador">
+        Jugador X: <span id="ganadosX">0</span>
+        Jugador O: <span id="ganadosO">0</span>
+        Empates: <span id="empate">0</span>
+    </div>
+    <div class="tablero" id="tablero">
+        <div class="celda" data-indice="0"></div>
+        <div class="celda" data-indice="1"></div>
+        <div class="celda" data-indice="2"></div>
+        <div class="celda" data-indice="3"></div>
+        <div class="celda" data-indice="4"></div>
+        <div class="celda" data-indice="5"></div>
+        <div class="celda" data-indice="6"></div>
+        <div class="celda" data-indice="7"></div>
+        <div class="celda" data-indice="8"></div>
+    </div>
+
+<button id="btnNueva">Nueva partida</button>
+<script>
+let tateti;
+let empates = 0;
+let ganadosX = 0;
+let ganadosO = 0;
+class Tateti {
+    constructor() {
+        this.reset();
+    }
+ 
+    // turno de x u o siempre emipeza x
+    reset() {
+        this.tablero = [];
+        //se ejecuta 3 veces para cada una de las fiar y cada que se crea una fila se crea un array vacio
+        for (let f = 0; f < 3; f++) {
+            const fila = [];// fila vacia
+            for (let c = 0; c < 3; c++) {
+                fila.push({ ocupada: false, ficha: "", posicion: [f, c] });
+            }
+            this.tablero.push(fila);//guarda la fila completa en el tablero
+            //agrega un nuevo objeto a la fila
+        
+        }
+        //valores inicales
+        this.turno = 'X';
+        this.jugados = 0;
+    }
+ 
+    agregarFicha(fila, columna) {
+        //registra la coordenada del tablero ocupada e incrementa el contador
+        this.tablero[fila][columna].ocupada = true;
+        this.tablero[fila][columna].ficha = this.turno;
+        this.jugados++;//incrementa el contador
+    }
+ 
+    estaOcupada(fila, columna) {
+        return this.tablero[fila][columna].ocupada;// devuelve true o false de acuerdo a si el lugar esta ocupado o no
+    }
+ 
+    cambiarTurno() {
+        this.turno = (this.turno === 'X') ? 'O' : 'X';
+        //intercambia el turno 
+    }
+ 
+    mostrarTablero() {
+        console.log("------------------");
+        for (const f of this.tablero) {
+            console.log("|  " + f[0].ficha + "  |  " + f[1].ficha + "  |  " + f[2].ficha + "  |");
+        }
+        console.log("------------------");
+    }
+ 
+    diagonales() {
+        return [
+            [this.tablero[0][0], this.tablero[1][1], this.tablero[2][2]],
+            [this.tablero[0][2], this.tablero[1][1], this.tablero[2][0]]
+        ];
+    }
+ 
+    columna(n) {
+        return this.tablero.map(fila => fila[n]);
+    }
+ 
+    columnas() {
+        return [this.columna(0), this.columna(1), this.columna(2)];
+    }
+ 
+    // todas las líneas posibles: 3 columnas + 3 filas + 2 diagonales
+    lineas() {
+        return this.columnas().concat(this.tablero).concat(this.diagonales());
+    }
+ 
+    estaTerminado() {
+        return this.estaLleno() || this.hay3EnLinea();
+    }
+ 
+    estaLleno() {
+        return this.jugados >= 9;
+    }
+ 
+    // devuelve la línea ganadora (array de 3 celdas) o null si no hay
+    lineaGanadora() {
+        for (const linea of this.lineas()) {
+            if (this.hay3Iguales(linea)) {
+                return linea;
+            }
+        }
+        return null;
+    }
+ 
+    hay3EnLinea() {
+        return this.lineaGanadora() !== null;
+    }
+ 
+    // las tres celdas están ocupadas y tienen la misma ficha
+    hay3Iguales(linea) {
+        const primera = linea[0];
+        return primera.ocupada && linea.every(celda => celda.ocupada && celda.ficha === primera.ficha);
+    }
+}
+const celdasDOM = document.querySelectorAll('.celda');
+const mensaje = document.getElementById('mensaje');
+const btnNueva = document.getElementById('btnNueva');
+ 
+// la celda (fila, columna) es la posición fila*3 + columna dentro de la lista
+function celdaDOM(fila, columna) {
+    return celdasDOM[fila * 3 + columna];
+}
+ 
+function mostrarTurno() {
+    mensaje.textContent = "Turno del jugador: " + tateti.turno;
+}
+ 
+function mostrarMarcador() {
+    document.getElementById('ganadosX').textContent = ganadosX;
+    document.getElementById('ganadosO').textContent = ganadosO;
+    document.getElementById('empate').textContent = empates;
+}
+ 
+function limpiarCeldas() {
+    for (const celda of celdasDOM) {
+        celda.textContent = "";
+        celda.classList.remove('ganadora');
+    }
+}
+ 
+function resaltarLineaGanadora() {
+    const linea = tateti.lineaGanadora();
+    if (linea) {
+        for (const celda of linea) {
+            const [fila, columna] = celda.posicion;
+            celdaDOM(fila, columna).classList.add('ganadora');
+        }
+    }
+}
+
+function finalizarSiTermino() {
+    if (!tateti.estaTerminado()) {
+        return false;
+    }
+ 
+    if (tateti.hay3EnLinea()) {
+        // el que jugó último es el que ganó, y todavía no cambió el turno
+        if (tateti.turno === 'X') {
+            ganadosX++;
+        } else {
+            ganadosO++;
+        }
+        mensaje.textContent = "¡Ganó el jugador " + tateti.turno + "!";
+        resaltarLineaGanadora();
+    } else {
+        empates++;
+        mensaje.textContent = "Empate";
+    }
+ 
+    mostrarMarcador();
+    return true;
+}
+ 
+function jugada(celda, fila, columna) {
+    // no se puede jugar si terminó la partida o si la celda está ocupada
+    if (tateti.estaTerminado() || tateti.estaOcupada(fila, columna)) {
+        return;
+    }
+ 
+    tateti.agregarFicha(fila, columna);
+    celda.textContent = tateti.turno;
+    tateti.mostrarTablero();
+ 
+    if (finalizarSiTermino()) {
+        return;
+    }
+ 
+    tateti.cambiarTurno();
+    mostrarTurno();
+}
+ 
+
+
+function nuevaPartida() {
+    tateti.reset();
+    limpiarCeldas();
+    mostrarTurno();
+}
+ 
+function nuevaPartida() {
+    tateti.reset();
+    limpiarCeldas();
+    mostrarTurno();
+}
+ 
+// lógica de interacción: un solo manejador para el clic de todas las celdas
+function manejarClickCelda(e) {
+    const celdaClickeada = e.target; // la celda que se clickeó
+    const indice = parseInt(celdaClickeada.getAttribute('data-indice')); // va de 0 a 8
+ 
+    // el índice se pasa a fila y columna para usar el tablero de la clase
+    jugada(celdaClickeada, Math.floor(indice / 3), indice % 3);
+}
+ 
+celdasDOM.forEach(function (celda) {
+    celda.addEventListener('click', manejarClickCelda);
+});
+ 
+btnNueva.addEventListener('click', nuevaPartida);
+ 
+tateti = new Tateti();
+mostrarTurno();
+mostrarMarcador();
+</script>
