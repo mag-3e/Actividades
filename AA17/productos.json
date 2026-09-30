@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombre": "Laptop Gamer",
+    "precio": 1200000,
+    "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfJ9dA-3W5IEynVvEERDehfxEtvhYEJW3WPLEkhkMxho9PpXVzggJWIV0&s=10"
+  },
+  {
+    "id": 2,
+    "nombre": "Teclado Mecanico",
+    "precio": 85000,
+    "imagen": "https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcQ4mng0yCOQHeefjhmkGgEpYeaEdJV6KTyBI7nDyF4_wRALpZpab5usAPtxCN8YgOZFNAggS79kmeulKiGi49W_ZO2w09r3GKlS4VF7UD4oAGxcCq_5-3H5"
+  },
+  {
+    "id": 3,
+    "nombre": "Raton Ergonomico",
+    "precio": 45000,
+    "imagen": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSx3yJAg_1dj7OzX_PH95ZxOWAlZ2xP39tayYcdtQVObQ&s"
+  }
+]
