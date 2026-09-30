@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo de Productos</title>
+  <style>
+    #contenedor-productos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 20px;
+      justify-content: center;
+    }
+
+    .tarjeta-producto {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 16px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      font-family: Arial, sans-serif;
+    }
+
+    .tarjeta-producto img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+    }
+
+    .tarjeta-producto h3 {
+      font-size: 1.2rem;
+      margin: 10px 0;
+    }
+
+    .tarjeta-producto p {
+      color: #2c3e50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Nuestros Productos</h1>
+  
+  <div id="contenedor-productos"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
