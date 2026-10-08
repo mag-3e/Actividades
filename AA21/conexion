@@ -1,0 +1,7 @@
+<?php
+$pdo = new PDO(
+    "mysql:host=localhost;dbname=aa21;charset=utf8mb4",
+    "root",  
+    "18.05.46.711.314.05",      
+    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+);
