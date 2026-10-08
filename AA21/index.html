@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos</title>
+</head>
+<body>
+  <h1>Productos</h1>
+
+  <input id="nombre" placeholder="Nombre">
+  <input id="categoria" placeholder="Categoría">
+  <input id="precio" type="number" step="0.01" placeholder="Precio">
+  <input id="stock" type="number" placeholder="Stock">
+  <button id="agregar">Agregar</button>
+
+  <table border="1">
+    <thead>
+      <tr><th>ID</th><th>Nombre</th><th>Categoría</th><th>Precio</th><th>Stock</th></tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+
+  <script>
+    async function cargar() {
+      const res = await fetch("api.php");
+      const productos = await res.json();
+      const lista = document.getElementById("lista");
+      lista.innerHTML = "";
+      productos.forEach(p => {
+        const fila = document.createElement("tr");
+        [p.id, p.nombre, p.categoria, p.precio, p.stock].forEach(valor => {
+          const td = document.createElement("td");
+          td.textContent = valor;   // textContent evita inyectar HTML
+          fila.appendChild(td);
+        });
+        lista.appendChild(fila);
+      });
+    }
+
+    document.getElementById("agregar").addEventListener("click", async () => {
+      const datos = {
+        nombre: document.getElementById("nombre").value,
+        categoria: document.getElementById("categoria").value,
+        precio: document.getElementById("precio").value,
+        stock: document.getElementById("stock").value || 0,
+      };
+      await fetch("api.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos),
+      });
+      cargar();
+    });
+
+    cargar();
+  </script>
+</body>
+</html>
