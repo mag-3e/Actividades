@@ -1,18 +1,16 @@
 <?php
-// Configuración de la conexión a MySQL con PDO
 $host    = 'localhost';
 $db      = 'clase_backend';
 $user    = 'root';
-$pass    = '18.05.46.711.314.05';     
+$pass    = '';     // mi contraseña
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 $options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, // Lanza PDOException ante errores
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,       // Devuelve arreglos asociativos
-    PDO::ATTR_EMULATE_PREPARES   => false,                  // Prepared statements reales
-];
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION, 
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,      
+    PDO::ATTR_EMULATE_PREPARES   => false,                 
 
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
